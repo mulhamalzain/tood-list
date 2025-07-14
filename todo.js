@@ -1,3 +1,4 @@
+
 const title = document.querySelector('.title'); //title.innerHTML = '<span>Todo</span>'; you can inject html by js and that is not recommended  // so we use textContent  
 let todos = JSON.parse(localStorage.getItem("todos")) || [];  
 
@@ -10,6 +11,16 @@ console.log('title:', title);
 
 const counter = document.getElementById("todo-count"); 
 const searchInput = document.getElementById("search");  
+fetch("https://jsonplaceholder.typicode.com/todos")
+  .then((res) => res.json())
+  .then((fetchedTodos) => {
+     todos = fetchedTodos.slice(0, 10).map(t => ({
+      text: t.title,
+      completed: t.completed
+     }));
+      localStorage.setItem("todos", JSON.stringify(todos));
+      renderTodos();
+  })
 
 function renderTodos(filter = "") {   
   ul.innerHTML = "";   
@@ -18,7 +29,7 @@ function renderTodos(filter = "") {
     .forEach((todo) => {       
       const newTodo = document.createElement("li");       
       newTodo.classList.add("todo-item");        
-
+      
       const checkbox = document.createElement("input");       
       checkbox.type = "checkbox";       
       checkbox.checked = todo.completed;        
